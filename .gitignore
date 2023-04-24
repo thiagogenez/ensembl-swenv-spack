@@ -1,0 +1,4 @@
+# Ignore python things
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
