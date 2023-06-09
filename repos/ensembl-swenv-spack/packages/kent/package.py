@@ -18,9 +18,7 @@ class Kent(MakefilePackage):
     version("335.1", sha256="a661b6004b83e9a70bd1d17cd1c8599e5c6892f25868c797a5ac20f45c7a28c6")
 
     # The docs say it needs gcc to build.
-    for name in spack.compilers.supported_compilers():
-        if name != "gcc":
-            conflicts(f"%{name}")
+    requires("%gcc")
 
     depends_on("gmake", type='build')
     depends_on("libiconv")
@@ -33,7 +31,7 @@ class Kent(MakefilePackage):
 
     # TODO - upstream htslib does not work, we need the "ucsc" htslib which
     # includes a specific member field in one of the structs
-    depends_on("ucsc_htslib", when="@335.1")
+    #depends_on("ucsc_htslib", when="@335.1")
 
     cflags = ["-fPIC", "-z muldefs"]
 
