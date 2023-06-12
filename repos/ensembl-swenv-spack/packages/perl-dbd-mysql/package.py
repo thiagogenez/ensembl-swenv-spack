@@ -17,5 +17,7 @@ class PerlDbdMysql(PerlPackage):
 
     depends_on("perl-test-deep", type=("build", "run"))
     depends_on("perl-dbi", type=("build", "run"))
-    depends_on("mysql", type=("build", "run"))
+    # Avoid segfault with 8.0.33 and DBD::mysql 4.050
+    # See https://github.com/perl5-dbi/DBD-mysql/issues/352
+    depends_on("mysql@:8.0.32", type=("build", "run"))
     depends_on("perl-devel-checklib", type=("build"))
