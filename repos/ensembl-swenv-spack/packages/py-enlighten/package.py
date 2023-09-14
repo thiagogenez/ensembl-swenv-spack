@@ -36,4 +36,3 @@ class PyEnlighten(PythonPackage):
     depends_on("py-setuptools", type="build")
     depends_on("py-blessed", type=("build", "run"))
     depends_on("py-prefixed", type=("build", "run"))
-

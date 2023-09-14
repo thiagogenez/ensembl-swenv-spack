@@ -29,4 +29,3 @@ class PyMoto(PythonPackage):
     depends_on("py-responses@0.13.0:", type=("build", "run"))
     depends_on("py-jinja2@2.10.1:", type=("build", "run"))
     depends_on("py-importlib-metadata", when="python@:3.8", type=("build", "run"))
-

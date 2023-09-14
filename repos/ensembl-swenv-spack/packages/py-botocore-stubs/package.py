@@ -21,7 +21,6 @@ class PyBotocoreStubs(PythonPackage):
     version("1.31.40", sha256="2001a253daf4ae2e171e6137b9982a00a7fbfc7a53449a16856dc049e7cd5214")
     version("1.31.39", sha256="a6aa469cf5d94f99439d3a5705fb09934fed06d528be06b301665ffd36497cd8")
 
-
     depends_on("python@3.7:", type=("build", "run"))
     depends_on("py-poetry-core", type="build")
     depends_on("py-types-awscrt", type=("build", "run"))

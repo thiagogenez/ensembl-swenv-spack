@@ -34,5 +34,3 @@ class PyPrefixed(PythonPackage):
     version("0.7.0", sha256="0b54d15e602eb8af4ac31b1db21a37ea95ce5890e0741bb0dd9ded493cefbbe9")
 
     depends_on("py-setuptools", type="build")
-
-

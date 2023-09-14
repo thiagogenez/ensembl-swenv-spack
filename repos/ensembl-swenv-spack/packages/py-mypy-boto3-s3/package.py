@@ -19,7 +19,9 @@ class PyMypyBoto3S3(PythonPackage):
     version("1.28.27", sha256="f1094344f68d1ffe2b998404e2e4ff9aa4239438692187fa83ad7b734739991c")
     version("1.28.19", sha256="b8104b191924d8672068d21d748c0f8ae0b0e1950324cb315ec8a1ceed9d23ac")
     version("1.28.16", sha256="4e55fdad729b6e6f45211e354bd1a0a745a565fe9d1e462737f775c28849cfb5")
-    version("1.28.15.post1", sha256="65502be825789fd16e4cacf10aecd6408554b60ae5d261be60fd46bee69d8592")
+    version(
+        "1.28.15.post1", sha256="65502be825789fd16e4cacf10aecd6408554b60ae5d261be60fd46bee69d8592"
+    )
 
     depends_on("python@3.7:", type=("build", "run"))
     depends_on("py-setuptools", type="build")

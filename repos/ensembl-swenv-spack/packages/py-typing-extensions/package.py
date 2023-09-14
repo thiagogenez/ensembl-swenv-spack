@@ -23,6 +23,3 @@ class PyTypingExtensions(PythonPackage):
 
     depends_on("python@3.7:", type=("build", "run"))
     depends_on("py-flit-core", type="build")
-    
-
-
