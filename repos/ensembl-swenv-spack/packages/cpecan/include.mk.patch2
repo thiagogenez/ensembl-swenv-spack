@@ -1,0 +1,29 @@
+diff --git a/include.mk b/include.mk
+index 18a0e74..adcc541 100644
+--- a/include.mk
++++ b/include.mk
+@@ -1,10 +1,10 @@
+ #Modify this variable to set the location of sonLib
+-sonLibRootDir?=${rootPath}/../sonLib
+-sonLibDir=${sonLibRootDir}/lib
++#sonLibRootDir?=${rootPath}/../sonLib
++#sonLibDir=${sonLibRootDir}/lib
+ #Use sonLib bin and lib dirs
+ BINDIR ?= ${sonLibRootDir}/bin
+ LIBDIR ?= ${sonLibDir}
+-CPPFLAGS +=-I${sonLibRootDir}/C/inc -I${sonLibRootDir}/externalTools/cutest/
++#CPPFLAGS +=-I${sonLibRootDir}/C/inc -I${sonLibRootDir}/externalTools/cutest/
+
+ ifndef TARGETOS
+   TARGETOS := $(shell uname -s)
+@@ -18,8 +18,8 @@ else
+  CFLAGS+= -fopenmp
+ endif
+
+-include  ${sonLibRootDir}/include.mk
++#include  ${sonLibRootDir}/include.mk
+
+-LDLIBS = ${sonLibDir}/sonLib.a ${sonLibDir}/cuTest.a ${dblibs} ${LIBS}
+-LIBDEPENDS = ${sonLibDir}/sonLib.a ${sonLibDir}/cuTest.a
++LDLIBS = ${LIBDIR} ${dblibs} ${LIBS}
++#LIBDEPENDS = ${sonLibDir}/sonLib.a ${sonLibDir}/cuTest.a
