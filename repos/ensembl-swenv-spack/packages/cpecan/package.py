@@ -3,30 +3,14 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install cpecan
-#
-# You can edit this file again by typing:
-#
-#     spack edit cpecan
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
-import os,shutil
+import os, shutil
 
 from spack.package import *
 
 
 class Cpecan(MakefilePackage):
-    """FIXME: Put a proper description of your package here."""
+    """C and python code for pairwise multiple sequence alignment,
+    pulling out this functionality from the Cactus alignment program."""
 
     homepage = "https://github.com/ComparativeGenomicsToolkit/cPecan"
     git = "https://github.com/ComparativeGenomicsToolkit/cPecan.git"
@@ -35,26 +19,25 @@ class Cpecan(MakefilePackage):
 
     version("af9c597", commit="af9c59789e997d7a38723e567cc4c62394679cdd")
 
-    variant("hiredis", default=True, description="Enable hiredis database support")
+    variant("hiredis", default=False, description="Enable hiredis database support")
 
     depends_on("sonlib", type=("build", "link"))
-    depends_on("llvm-openmp", type=("build","link"),  when="platform=darwin")
+    depends_on("llvm-openmp", type=("build", "link"), when="platform=darwin")
     depends_on("hiredis", when="+hiredis", type=("build", "link"))
 
-
     def edit(self, spec, prefix):
-
         include_mk = FileFilter("include.mk")
-        include_mk.filter("include","#include")
-        include_mk.filter("CPPFLAGS","#CPPFLAGS")
+        include_mk.filter("include", "#include")
+        include_mk.filter("CPPFLAGS", "#CPPFLAGS")
 
-        pairwiseAlignerTest = FileFilter('tests/pairwiseAlignerTest.c')
-        pairwiseAlignerTest.filter(r'#include "../../sonLib/lib/multipleAligner.h"',  '')
-        
+        pairwiseAlignerTest = FileFilter("tests/pairwiseAlignerTest.c")
+        pairwiseAlignerTest.filter(r'#include "../../sonLib/lib/multipleAligner.h"', "")
+
         make_include = FileFilter("externalTools/lastz-distrib-1.03.54/make-include.mak")
-        make_include.filter("installDir.*","installDir = {0}".format(os.environ.get("BINDIR")))        
+        make_include.filter("installDir.*", "installDir = {0}".format(os.environ.get("BINDIR")))
 
-        
+        makefile = FileFilter("externalTools/lastz-distrib-1.03.54/src/Makefile")
+        makefile.filter("CC=gcc", "")
 
     def setup_build_environment(self, env):
         build = {
@@ -66,15 +49,17 @@ class Cpecan(MakefilePackage):
             env.set(k, v)
 
         # pointer to sonlib dependency
-        env.set("sonLibRootDir", "{0}".format(self.spec['sonlib'].prefix))
+        env.set("sonLibRootDir", "{0}".format(self.spec["sonlib"].prefix))
 
         # from include.mk of sonlib
         env.set("RANLIB", "ranlib")
         env.set("dblibs", "-lz -lm")
-        env.append_flags("CXXFLAGS","-fPIC -O3 -g -Wall --pedantic -funroll-loops -DNDEBUG")
+        env.append_flags("CXXFLAGS", "-fPIC -O3 -g -Wall --pedantic -funroll-loops -DNDEBUG")
         env.append_flags("CFLAGS", "-fPIC -std=c99 -O3 -g -Wall -funroll-loops -DNDEBUG")
         env.append_flags("CPPFLAGS", "-Iinc -Iimpl -fsigned-char")
-        
+
+        if "+hiredis" in self.spec:
+            env.append_flags("dblibs", "-DHAVE_REDIS=1")
 
     def build(self, spec, prefix):
         make(parallel=True)
@@ -84,7 +69,6 @@ class Cpecan(MakefilePackage):
         mkdirp(prefix.include)
         mkdirp(prefix.lib)
         mkdirp(prefix.bin)
-
 
         for header in find(env["LIBDIR"], "*.h"):
             install(header, prefix.include)
@@ -99,3 +83,8 @@ class Cpecan(MakefilePackage):
     def cleanup(self):
         for rubbish in find(env["BINDIR"], "*.dSYM"):
             shutil.rmtree("{0}".format(rubbish))
+
+    @run_after("install")
+    def darwin_fix(self):
+        if self.spec.satisfies("platform=darwin"):
+            fix_darwin_install_name(self.prefix.lib)

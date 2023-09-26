@@ -59,3 +59,8 @@ class Sonlib(MakefilePackage):
     def cleanup(self):
         for rubbish in find(env["BINDIR"], "*.dSYM"):
             shutil.rmtree("{0}".format(rubbish))
+
+    @run_after("install")
+    def darwin_fix(self):
+        if self.spec.satisfies("platform=darwin"):
+            fix_darwin_install_name(self.prefix.lib)
